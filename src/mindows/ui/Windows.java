@@ -1,6 +1,5 @@
 package mindows.ui;
 
-import arc.scene.ui.layout.*;
 import arc.util.*;
 import mindustry.gen.*;
 

@@ -16,7 +16,9 @@ public class Window extends Table{
     public TextureRegionDrawable icon;
     public int id;
     public Cons<Table> content;
+    public boolean shown = false;
 
+    public float minWindowWidth = 160, minWindowHeight = 60;
     public float maxWindowWidth = Float.MAX_VALUE, maxWindowHeight = Float.MAX_VALUE;
 
     public Window(TextureRegionDrawable icon, String name){
@@ -39,7 +41,7 @@ public class Window extends Table{
         setPosition(Core.graphics.getWidth() / 2f - getWidth() / 2f, Core.graphics.getHeight() / 2f - getHeight() / 2f);
         id = WindowManager.register(this);
 
-        visible(() -> false);
+        visible(() -> shown);
     }
 
     protected void build(Table t){
@@ -60,7 +62,7 @@ public class Window extends Table{
             
             // exit button
             t.table(Tex.buttonEdge3, b -> {
-                b.button(Icon.cancel, Styles.emptyi, () -> visible(() -> false));
+                b.button(Icon.cancel, Styles.emptyi, () -> shown = false);
             }).maxHeight(40f).width(80f).growY();
 
             // handles the dragging.
@@ -115,8 +117,8 @@ public class Window extends Table{
 
                         // will softlock if initial size is smaller than minimum
                         // so don't do that!
-                        if(getWidth() + w < 160f || getWidth() + w > maxWindowWidth) w = 0;
-                        if(getHeight() - h < 60 || getHeight() - h > maxWindowHeight) h = 0;
+                        if(getWidth() + w < minWindowWidth || getWidth() + w > maxWindowWidth) w = 0;
+                        if(getHeight() - h < minWindowHeight || getHeight() - h > maxWindowHeight) h = 0;
                         sizeBy(w, -h);
                         moveBy(0, h);
                         lastX = v.x;
@@ -125,5 +127,9 @@ public class Window extends Table{
                 });
             }).size(20f).left();
         }).height(20f).growX();
+    }
+
+    public void toggle(){
+        shown = !shown;
     }
 }
